@@ -5,9 +5,6 @@ import { Collapse } from '@alfalab/core-components/collapse';
 import { Gap } from '@alfalab/core-components/gap';
 import { Input } from '@alfalab/core-components/input';
 import { List } from '@alfalab/core-components/list';
-import { PureCell } from '@alfalab/core-components/pure-cell';
-import { Radio } from '@alfalab/core-components/radio';
-import { Status } from '@alfalab/core-components/status';
 import { Steps } from '@alfalab/core-components/steps';
 import { Switch } from '@alfalab/core-components/switch';
 
@@ -19,7 +16,6 @@ import { ChevronDownMIcon } from '@alfalab/icons-glyph/ChevronDownMIcon';
 import { ChevronLeftMIcon } from '@alfalab/icons-glyph/ChevronLeftMIcon';
 import { ChevronUpMIcon } from '@alfalab/icons-glyph/ChevronUpMIcon';
 import { InformationCircleMIcon } from '@alfalab/icons-glyph/InformationCircleMIcon';
-import { UsersMIcon } from '@alfalab/icons-glyph/UsersMIcon';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -28,8 +24,7 @@ import oneImg from './assets/one.png';
 import questionsImg from './assets/questions.png';
 import threeImg from './assets/three.png';
 import twoImg from './assets/two.png';
-import { faqs, TICKER_TO_IMAGE, TICKER_TO_TITLE, useRobotsData } from './hooks/useData';
-import { ImgStack } from './ImgStack';
+import { faqs, PERSON_TO_IMG, useRobotsData } from './hooks/useData';
 import { LS, LSKeys } from './ls';
 import { RiskStatus } from './RiskStatus';
 import { appSt } from './style.css';
@@ -54,10 +49,9 @@ export const App = () => {
   const [autoSum, setAutoSum] = useState(0);
   const [perItem, setPerItem] = useState<OptionKey>('per_month');
   const [selectedRobot, setSelectedRobot] = useState<RobotItem | null>(null);
-  const [view, setView] = useState<'robot' | 'step1' | 'step2'>('robot');
+  const [view, setView] = useState<'robot' | 'step2'>('robot');
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [collapsedItems, setCollapsedItem] = useState<string[]>([]);
-  const [selectedTicker, setSelectedTicker] = useState('');
   const [checked, setChecked] = useState(true);
   const [openBs, setOpenBs] = useState(false);
   const [payDate, setPayDate] = useState(dayjs().add(1, 'month').toDate().toISOString());
@@ -123,7 +117,6 @@ export const App = () => {
         <>
           <div className={appSt.container}>
             <div>
-              <Typography.Text view="secondary-medium">ШАГ 2 ИЗ 2</Typography.Text>
               <Typography.TitleResponsive
                 style={{ marginTop: '6px' }}
                 tag="h1"
@@ -197,7 +190,7 @@ export const App = () => {
               size={56}
               style={{ minWidth: 56, maxWidth: 56 }}
               onClick={() => {
-                setView('step1');
+                setView('robot');
               }}
             >
               <ChevronLeftMIcon width={24} height={24} />
@@ -221,77 +214,6 @@ export const App = () => {
       );
     }
 
-    if (view === 'step1') {
-      return (
-        <>
-          <div className={appSt.container}>
-            <div>
-              <Typography.Text view="secondary-medium">ШАГ 1 ИЗ 2</Typography.Text>
-              <Typography.TitleResponsive
-                style={{ marginTop: '6px' }}
-                tag="h1"
-                view="medium"
-                font="system"
-                weight="semibold"
-              >
-                Выберите актив
-              </Typography.TitleResponsive>
-            </div>
-            {selectedRobot.available_assets.map(ticker => (
-              <PureCell className={appSt.stockRow} key={ticker} onClick={() => setSelectedTicker(ticker)}>
-                <PureCell.Graphics verticalAlign="center">
-                  <img src={TICKER_TO_IMAGE[ticker]} width={48} height={48} alt={ticker} />
-                </PureCell.Graphics>
-                <PureCell.Content>
-                  <PureCell.Main>
-                    <Typography.Text view="primary-medium" tag="p" defaultMargins={false}>
-                      {TICKER_TO_TITLE[ticker]}
-                    </Typography.Text>
-
-                    <Typography.Text view="primary-small" color="secondary">
-                      {ticker}
-                    </Typography.Text>
-                  </PureCell.Main>
-                </PureCell.Content>
-                <PureCell.Addon verticalAlign="center">
-                  <Radio checked={selectedTicker === ticker} onChange={() => setSelectedTicker(ticker)} />
-                </PureCell.Addon>
-              </PureCell>
-            ))}
-          </div>
-          <Gap size={96} />
-
-          <div className={appSt.bottomBtn}>
-            <ButtonMobile
-              view="secondary"
-              size={56}
-              style={{ minWidth: 56, maxWidth: 56 }}
-              onClick={() => {
-                setSelectedTicker('');
-                setView('robot');
-              }}
-            >
-              <ChevronLeftMIcon width={24} height={24} />
-            </ButtonMobile>
-            <ButtonMobile
-              block
-              view="primary"
-              size={56}
-              onClick={() => {
-                if (selectedTicker) {
-                  window.gtag('event', '6181_add_bot', { bot: selectedRobot.robot_info.name, var: 'var5' });
-
-                  setView('step2');
-                }
-              }}
-            >
-              Продолжить
-            </ButtonMobile>
-          </div>
-        </>
-      );
-    }
-
     return (
       <>
         <div className={appSt.container}>
@@ -300,16 +222,6 @@ export const App = () => {
               <RiskStatus
                 risk={robots.findIndex(robot => robot.id === selectedRobot.id) === robots.length - 1 ? 'medium' : 'low'}
               />
-              <Status view="muted" color="grey" size={20} uppercase={false}>
-                <Typography.Text
-                  view="secondary-small"
-                  weight="bold"
-                  style={{ display: 'flex', alignItems: 'center', gap: 4 }}
-                >
-                  <UsersMIcon width={10} height={10} />
-                  <span style={{ marginTop: '1px' }}>1235 подключили</span>
-                </Typography.Text>
-              </Status>
             </div>
             <Typography.TitleResponsive style={{ margin: '6px 0' }} tag="h1" view="xlarge" font="system" weight="semibold">
               {selectedRobot.robot_info.name}
@@ -388,18 +300,19 @@ export const App = () => {
           </div>
 
           <Typography.TitleResponsive tag="h2" view="small" font="system" weight="semibold">
-            Доступные бумаги
+            Автор робота
           </Typography.TitleResponsive>
 
-          <div>
-            <Swiper style={{ marginLeft: '0' }} spaceBetween={6} slidesPerView="auto">
-              {selectedRobot.available_assets.map(ticker => (
-                <SwiperSlide className={appSt.stockSlide} key={ticker}>
-                  <img src={TICKER_TO_IMAGE[ticker]} width={48} height={48} alt={ticker} />
-                  <Typography.Text view="secondary-small">{TICKER_TO_TITLE[ticker]}</Typography.Text>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+          <div className={appSt.box2} style={{ padding: '12px' }}>
+            <img src={PERSON_TO_IMG[selectedRobot.author.img]} width={48} height={48} alt="author" />
+            <div>
+              <Typography.Text tag="p" defaultMargins={false} view="primary-medium">
+                {selectedRobot.author.name}
+              </Typography.Text>
+              <Typography.Text tag="p" defaultMargins={false} view="primary-small" color="secondary">
+                Альфа-Банк
+              </Typography.Text>
+            </div>
           </div>
 
           <div>
@@ -513,7 +426,7 @@ export const App = () => {
             size={56}
             onClick={() => {
               window.gtag('event', '6181_add_bot', { bot: selectedRobot.robot_info.name, var: 'var5' });
-              setView('step1');
+              setView('step2');
             }}
           >
             Подключить
@@ -576,16 +489,6 @@ export const App = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <RiskStatus risk={index === robots.length - 1 ? 'medium' : 'low'} />
-              <Status view="muted" color="grey" size={20} uppercase={false}>
-                <Typography.Text
-                  view="secondary-small"
-                  weight="bold"
-                  style={{ display: 'flex', alignItems: 'center', gap: 4 }}
-                >
-                  <UsersMIcon width={10} height={10} />
-                  <span style={{ marginTop: '1px' }}>1235 подключили</span>
-                </Typography.Text>
-              </Status>
             </div>
 
             <div>
@@ -628,9 +531,17 @@ export const App = () => {
               </div>
             </div>
 
-            {robot.available_assets.length > 0 && index !== 0 && index !== robots.length - 1 && (
-              <ImgStack tickers={robot.available_assets} />
-            )}
+            <div className={appSt.botAuthor}>
+              <img src={PERSON_TO_IMG[robot.author.img]} width={38} height={38} alt="author" />
+              <div>
+                <Typography.Text tag="p" defaultMargins={false} view="secondary-medium" color="secondary">
+                  Автор робота
+                </Typography.Text>
+                <Typography.Text tag="p" defaultMargins={false} view="primary-small">
+                  {robot.author.name}
+                </Typography.Text>
+              </div>
+            </div>
           </div>
         ))}
       </div>

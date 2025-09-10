@@ -118,6 +118,15 @@ const swSlide = style({
   width: 'min-content',
 });
 
+const botAuthor = style({
+  borderRadius: '12px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  padding: '8px 12px',
+  backgroundColor: '#FFFFFF',
+});
+
 export const appSt = {
   bottomBtn,
   container,
@@ -132,4 +141,5 @@ export const appSt = {
   stepStyle,
   stockRow,
   swSlide,
+  botAuthor,
 };

@@ -4,11 +4,17 @@ import lukolImg from '../assets/lukol.png';
 import mechelImg from '../assets/mechel.png';
 import nikelImg from '../assets/nikel.png';
 import novatekImg from '../assets/novatek.png';
+import person1Img from '../assets/person_1.png';
+import person2Img from '../assets/person_2.png';
+import person3Img from '../assets/person_3.png';
+import person4Img from '../assets/person_4.png';
+import person5Img from '../assets/person_5.png';
 import rosneftImg from '../assets/rosneft.png';
 import sberImg from '../assets/sber.png';
 import tbankImg from '../assets/tbank.png';
 import vtbImg from '../assets/vtb.png';
 import x5Img from '../assets/x5.png';
+
 import { RobotItem } from '../types';
 
 export const TICKER_TO_IMAGE: Record<string, string> = {
@@ -20,7 +26,7 @@ export const TICKER_TO_IMAGE: Record<string, string> = {
   ROSN: rosneftImg,
   SBER: sberImg,
   T: tbankImg,
-  VTB: vtbImg,
+  VTBR: vtbImg,
   X5: x5Img,
 };
 export const TICKER_TO_TITLE: Record<string, string> = {
@@ -32,8 +38,16 @@ export const TICKER_TO_TITLE: Record<string, string> = {
   ROSN: 'Роснефть',
   SBER: 'Сбербанк',
   T: 'Т Банк',
-  VTB: 'ВТБ',
+  VTBR: 'ВТБ',
   X5: 'ИКС 5',
+};
+
+export const PERSON_TO_IMG: Record<string, string> = {
+  person_1: person1Img,
+  person_2: person2Img,
+  person_3: person3Img,
+  person_4: person4Img,
+  person_5: person5Img,
 };
 
 export const faqs = [
